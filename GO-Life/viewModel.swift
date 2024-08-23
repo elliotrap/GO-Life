@@ -12,7 +12,7 @@ import Combine
 class Model: ObservableObject {
     static let shared = Model()
     @Published var rows = 50
-    @Published var columns = 27
+    @Published var columns = 57
     @Published var grid: [[CellState]] = Array(repeating: Array(repeating: .dead, count: 27), count: 50)
     @Published var resourceMap: [[Double]] = Array(repeating: Array(repeating: 0.5, count: 27), count: 50)
     @Published var isRunning = false
@@ -87,6 +87,7 @@ class Model: ObservableObject {
         case toad
         case acorn
         case glider
+        case gosperGliderGun 
         case none
     }
     
@@ -131,7 +132,50 @@ class Model: ObservableObject {
                 grid[position.row + 2][position.col + 1] = .alive
                 grid[position.row + 2][position.col + 2] = .alive
             }
-        case .none:
+            
+        case .gosperGliderGun:
+            // Ensure the pattern fits within the grid bounds
+            if position.row < grid.count - 8 && position.col < grid[position.row].count - 37 {
+                // Upper left square
+                grid[position.row + 5][position.col + 1] = .alive
+                grid[position.row + 5][position.col + 2] = .alive
+                grid[position.row + 6][position.col + 1] = .alive
+                grid[position.row + 6][position.col + 2] = .alive
+                
+                // Left part
+                grid[position.row + 3][position.col + 13] = .alive
+                grid[position.row + 4][position.col + 12] = .alive
+                grid[position.row + 4][position.col + 14] = .alive
+                grid[position.row + 5][position.col + 11] = .alive
+                grid[position.row + 5][position.col + 15] = .alive
+                grid[position.row + 6][position.col + 11] = .alive
+                grid[position.row + 6][position.col + 15] = .alive
+                grid[position.row + 7][position.col + 13] = .alive
+                grid[position.row + 8][position.col + 12] = .alive
+                grid[position.row + 8][position.col + 14] = .alive
+                
+                // Center part
+                grid[position.row + 1][position.col + 25] = .alive
+                grid[position.row + 2][position.col + 23] = .alive
+                grid[position.row + 2][position.col + 25] = .alive
+                grid[position.row + 3][position.col + 21] = .alive
+                grid[position.row + 3][position.col + 22] = .alive
+                grid[position.row + 4][position.col + 21] = .alive
+                grid[position.row + 4][position.col + 22] = .alive
+                grid[position.row + 5][position.col + 21] = .alive
+                grid[position.row + 5][position.col + 22] = .alive
+                grid[position.row + 6][position.col + 23] = .alive
+                grid[position.row + 6][position.col + 25] = .alive
+                grid[position.row + 7][position.col + 25] = .alive
+                
+                // Far right square
+                grid[position.row + 3][position.col + 35] = .alive
+                grid[position.row + 3][position.col + 36] = .alive
+                grid[position.row + 4][position.col + 35] = .alive
+                grid[position.row + 4][position.col + 36] = .alive
+            }
+            
+                    case .none:
             grid[position.row][position.col] = grid[position.row][position.col] == .dead ? .alive : .dead
         }
 

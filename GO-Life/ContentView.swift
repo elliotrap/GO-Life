@@ -124,13 +124,13 @@ struct GameOfLifeView: View {
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         Button(action: {
-                                            viewModel.selectedPattern = .none
-                                            
+                                            viewModel.shadowEnabled.toggle()
+                                            viewModel.complexColorEnabled.toggle()
                                         }, label: {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
-                                                Text("None")
+                                                Text("Graphics")
                                                     .underline(false)
                                                     .foregroundColor(.black)
                                             }
@@ -568,11 +568,11 @@ struct GridView: View {
                 ForEach(0..<grid.count, id: \.self) { row in
                     HStack(spacing: geometry.size.width * 0.0060) {
                         ForEach(0..<grid[row].count, id: \.self) { col in
-                            let cellColor = colorForCellState(grid[row][col])
+                            let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
 
                             CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
                                 .foregroundColor(cellColor)
-                                .applyShadowBasedOnColor(cellColor)
+                                .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
                                 .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
                                 .onTapGesture {
 
@@ -581,7 +581,7 @@ struct GridView: View {
                                 }
                                 
                                 .cornerRadius(3)
-                                .applyShadowBasedOnColor(cellColor)
+                                .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
                         }
                     }
                 }
@@ -591,20 +591,9 @@ struct GridView: View {
         }
     }
 
-    func colorForCellState(_ state: CellState) -> Color {
-        switch state {
-        case .alive:
-            return .blue
-        case .dead:
-            return .black
-        case .complex:
-            return .green
-        }
-    }
-
     
-    func cellColorForRow(_ row: Int, col: Int) -> Color {
-        return colorForCellState(grid[row][col])
+    func cellColorForRow(_ row: Int, col: Int, complexColorEnabled: Bool) -> Color {
+        return colorForCellState(grid[row][col], complexColorEnabled: complexColorEnabled)
     }
     
     // Function to start the next generation calculation on a background thread
@@ -661,9 +650,10 @@ struct CustomRoundedRectangle: Shape {
     }
 }
 
+
 extension View {
-    // Extension to apply shadow based on color
-    func applyShadowBasedOnColor(_ color: Color) -> some View {
+    // Extension to apply shadow based on color with an enable/disable option
+    func applyShadowBasedOnColor(_ color: Color, isShadowEnabled: Bool) -> some View {
         let shadowColor: Color
         switch color {
         case .green:
@@ -675,12 +665,33 @@ extension View {
         default:
             shadowColor = .gray // Default shadow color if needed
         }
-        
-        return self.shadow(color: shadowColor, radius: 15, x: -5, y: -5)
+
+        // Use Group to keep the return type consistent
+        return Group {
+            if isShadowEnabled {
+                self.shadow(color: shadowColor, radius: 15, x: -5, y: -5)
+            } else {
+                self
+            }
+        }
     }
 }
 
+func colorForCellState(_ state: CellState, complexColorEnabled: Bool) -> Color {
+    guard complexColorEnabled else {
+        // Return a default color if complex colors are disabled
+        return state == .dead ? .black : .blue
+    }
 
+    switch state {
+    case .alive:
+        return .blue
+    case .dead:
+        return .black
+    case .complex:
+        return .green
+    }
+}
 #Preview {
     GameOfLifeView()
 }

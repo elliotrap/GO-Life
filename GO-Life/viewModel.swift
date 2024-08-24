@@ -18,6 +18,9 @@ class Model: ObservableObject {
     @Published var isRunning = false
     @Published var selectedPattern: SelectedPattern = .blinker
     @Published var timer: Publishers.Autoconnect<Timer.TimerPublisher>? = nil
+    @Published var shadowEnabled = true
+    @Published var complexColorEnabled: Bool = true
+
     @Published var speed: CGFloat = 0.01 {
         
         didSet {
@@ -300,7 +303,6 @@ class Model: ObservableObject {
             }
         }
     }
-
 }
 
 

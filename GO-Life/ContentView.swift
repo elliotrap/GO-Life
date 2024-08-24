@@ -310,13 +310,13 @@ struct GameOfLifeView: View {
                                                 .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                             
                                             Button(action: {
-                                                viewModel.selectedPattern = .gosperGliderGun
+                                                viewModel.selectedPattern = .beacon
                                             }, label: {
 
                                                 ZStack {
                                                     CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                         .fill(Color("button"))
-                                                    Text("Glider")
+                                                    Text("Beacon")
                                                         .underline(false)
                                                         .foregroundColor(.black)
                                                 }
@@ -332,13 +332,56 @@ struct GameOfLifeView: View {
                                                 .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                             
                                             Button(action: {
-                                                viewModel.selectedPattern = .gosperGliderGun
+                                                viewModel.selectedPattern = .pulsar
                                             }, label: {
 
                                                 ZStack {
                                                     CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                         .fill(Color("button"))
-                                                    Text("Glider")
+                                                    Text("pulsar")
+                                                        .underline(false)
+                                                        .foregroundColor(.black)
+                                                }
+                                            })
+                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                            .buttonStyle(.borderless)
+                                        }
+                                        
+                                        VStack(spacing: 0) {
+                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                                .foregroundColor(Color(.blue))
+                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                            
+                                            Button(action: {
+                                                viewModel.selectedPattern = .pentadecathlon
+                                            }, label: {
+
+                                                ZStack {
+                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                        .fill(Color("button"))
+                                                    Text("Pentadecathlon")
+                                                        .underline(false)
+                                                        .foregroundColor(.black)
+                                                }
+                                            })
+                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                            .buttonStyle(.borderless)
+                                        }
+                                        VStack(spacing: 0) {
+                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                                .foregroundColor(Color(.blue))
+                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                            
+                                            Button(action: {
+                                                viewModel.selectedPattern = .diehard
+                                            }, label: {
+
+                                                ZStack {
+                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                        .fill(Color("button"))
+                                                    Text("queenBeeShuttle")
                                                         .underline(false)
                                                         .foregroundColor(.black)
                                                 }
@@ -349,6 +392,8 @@ struct GameOfLifeView: View {
                                     }
 
                             }
+                                .frame(height: geometry.size.height * 0.400)
+                                .padding(.bottom, geometry.size.height * 0.450)
                         }
                     }
                     

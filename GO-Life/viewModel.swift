@@ -12,7 +12,7 @@ import Combine
 class Model: ObservableObject {
     static let shared = Model()
     @Published var rows = 50
-    @Published var columns = 57
+    @Published var columns = 27
     @Published var grid: [[CellState]] = Array(repeating: Array(repeating: .dead, count: 27), count: 50)
     @Published var resourceMap: [[Double]] = Array(repeating: Array(repeating: 0.5, count: 27), count: 50)
     @Published var isRunning = false
@@ -87,7 +87,10 @@ class Model: ObservableObject {
         case toad
         case acorn
         case glider
-        case gosperGliderGun 
+        case pulsar
+        case beacon
+        case pentadecathlon
+        case diehard
         case none
     }
     
@@ -133,49 +136,64 @@ class Model: ObservableObject {
                 grid[position.row + 2][position.col + 2] = .alive
             }
             
-        case .gosperGliderGun:
-            // Ensure the pattern fits within the grid bounds
-            if position.row < grid.count - 8 && position.col < grid[position.row].count - 37 {
-                // Upper left square
-                grid[position.row + 5][position.col + 1] = .alive
-                grid[position.row + 5][position.col + 2] = .alive
-                grid[position.row + 6][position.col + 1] = .alive
-                grid[position.row + 6][position.col + 2] = .alive
-                
-                // Left part
-                grid[position.row + 3][position.col + 13] = .alive
-                grid[position.row + 4][position.col + 12] = .alive
-                grid[position.row + 4][position.col + 14] = .alive
-                grid[position.row + 5][position.col + 11] = .alive
-                grid[position.row + 5][position.col + 15] = .alive
-                grid[position.row + 6][position.col + 11] = .alive
-                grid[position.row + 6][position.col + 15] = .alive
-                grid[position.row + 7][position.col + 13] = .alive
-                grid[position.row + 8][position.col + 12] = .alive
-                grid[position.row + 8][position.col + 14] = .alive
-                
-                // Center part
-                grid[position.row + 1][position.col + 25] = .alive
-                grid[position.row + 2][position.col + 23] = .alive
-                grid[position.row + 2][position.col + 25] = .alive
-                grid[position.row + 3][position.col + 21] = .alive
-                grid[position.row + 3][position.col + 22] = .alive
-                grid[position.row + 4][position.col + 21] = .alive
-                grid[position.row + 4][position.col + 22] = .alive
-                grid[position.row + 5][position.col + 21] = .alive
-                grid[position.row + 5][position.col + 22] = .alive
-                grid[position.row + 6][position.col + 23] = .alive
-                grid[position.row + 6][position.col + 25] = .alive
-                grid[position.row + 7][position.col + 25] = .alive
-                
-                // Far right square
-                grid[position.row + 3][position.col + 35] = .alive
-                grid[position.row + 3][position.col + 36] = .alive
-                grid[position.row + 4][position.col + 35] = .alive
-                grid[position.row + 4][position.col + 36] = .alive
+        case .beacon:
+            if position.row < grid.count - 3 && position.col < grid[position.row].count - 3 {
+                grid[position.row][position.col] = .alive
+                grid[position.row][position.col + 1] = .alive
+                grid[position.row + 1][position.col] = .alive
+                grid[position.row + 1][position.col + 1] = .alive
+                grid[position.row + 2][position.col + 2] = .alive
+                grid[position.row + 2][position.col + 3] = .alive
+                grid[position.row + 3][position.col + 2] = .alive
+                grid[position.row + 3][position.col + 3] = .alive
             }
             
-                    case .none:
+
+            
+        case .pulsar:
+            if position.row > 5 && position.row < grid.count - 5 && position.col > 5 && position.col < grid[position.row].count - 5 {
+                let offsets = [
+                    // Top and Bottom rows
+                    (-6, -4), (-6, -3), (-6, -2), (-6, 2), (-6, 3), (-6, 4),
+                    (-1, -4), (-1, -3), (-1, -2), (-1, 2), (-1, 3), (-1, 4),
+                    (1, -4), (1, -3), (1, -2), (1, 2), (1, 3), (1, 4),
+                    (6, -4), (6, -3), (6, -2), (6, 2), (6, 3), (6, 4),
+                    
+                    // Left and Right columns
+                    (-4, -6), (-3, -6), (-2, -6), (-4, -1), (-3, -1), (-2, -1),
+                    (-4, 1), (-3, 1), (-2, 1), (-4, 6), (-3, 6), (-2, 6),
+                    (2, -6), (3, -6), (4, -6), (2, -1), (3, -1), (4, -1),
+                    (2, 1), (3, 1), (4, 1), (2, 6), (3, 6), (4, 6)
+                ]
+                for (dx, dy) in offsets {
+                    grid[position.row + dx][position.col + dy] = .alive
+                }
+            
+            }
+            
+        case .pentadecathlon:
+            if position.row > 4 && position.row < grid.count - 4 && position.col > 2 && position.col < grid[position.row].count - 2 {
+                let offsets = [
+                    (0, 0), (0, 1), (0, 2), // Vertical middle line
+                    (-1, -1), (-1, 3), // Top wings
+                    (-2, 0), (-2, 1), (-2, 2), // Top line
+                    (1, -1), (1, 3), // Bottom wings
+                    (2, 0), (2, 1), (2, 2) // Bottom line
+                ]
+                for (dx, dy) in offsets {
+                    grid[position.row + dx][position.col + dy] = .alive
+                }
+            }
+            
+        case .diehard:
+            if position.row < grid.count - 2 && position.col < grid[position.row].count - 6 {
+                let offsets = [
+                    (0, 6), (1, 0), (1, 1), (2, 1), (2, 5), (2, 6), (2, 7)
+                ]
+                for (dx, dy) in offsets {
+                    grid[position.row + dx][position.col + dy] = .alive
+                }
+            }                    case .none:
             grid[position.row][position.col] = grid[position.row][position.col] == .dead ? .alive : .dead
         }
 

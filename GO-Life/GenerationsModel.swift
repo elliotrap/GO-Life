@@ -18,13 +18,18 @@ enum GenerationsCellState {
     case dormant
 }
 class GameOfLifeModel: ObservableObject {
+    static let shared = GameOfLifeModel()
+
     @Published var GenerationsRows: Int = 100
     @Published var GenerationsColumns: Int = 50
     @Published var grid: [[GenerationsCellState]] = Array(repeating: Array(repeating: .inactive, count: 27), count: 50)
     @Published var resourceMap: [[Double]] = Array(repeating: Array(repeating: 0.5, count: 27), count: 50)
-    @Published var isRunning = false
+    @Published var isRunning: Bool = false
+    @Published var isPaused: Bool = false
     private var timer: AnyCancellable?
     @Published var speed: CGFloat = 0.01
+    
+    
     init() {
         let rows = GenerationsRows
         let columns = GenerationsColumns
@@ -32,41 +37,53 @@ class GameOfLifeModel: ObservableObject {
         // Initialize grid and resourceMap
         grid = Array(repeating: Array(repeating: .inactive, count: columns), count: rows)
         resourceMap = Array(repeating: Array(repeating: 0.5, count: columns), count: rows)
-        populateGridRandomly() // Optional: populate the grid with some initial excited cells
+        
+        populateGridRandomly()
     }
-
 
 
     func startSimulation() {
-        guard !isRunning else { return } // Do nothing if already running
+        guard !isRunning else { return } // Prevent starting if already running
         isRunning = true
-        
-        // Start a new timer
+
         timer = Timer.publish(every: TimeInterval(speed), on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.updateGrid()
+                guard let self = self else { return }
+                if !self.isPaused {
+                    self.updateGrid()
+                }
             }
     }
 
-    func stopSimulation() {
-        guard isRunning else { return } // Do nothing if not running
-        isRunning = false
-        timer?.cancel()
-    }
-    
-    func resetTimer() {
-        stopSimulation() // Ensure the timer is stopped before resetting
-        startSimulation()
+    // Function to pause and resume simulation
+    func togglePause() {
+        if isRunning {
+            isPaused.toggle()
+            if isPaused {
+                // Pause the simulation
+                timer?.cancel()
+            } else {
+                // Resume the simulation
+                timer = Timer.publish(every: TimeInterval(speed), on: .main, in: .common)
+                    .autoconnect()
+                    .sink { [weak self] _ in
+                        self?.updateGrid()
+                    }
+            }
+        }
     }
 
 
+
+
+
     
-    private func populateGridRandomly() {
+     func populateGridRandomly() {
         for row in 0..<GenerationsRows {
             for col in 0..<GenerationsColumns {
                 let randomValue = Double.random(in: 0..<1)
-                if randomValue < 0.1 { // 10% chance to start excited
+                if randomValue < 0.04 { // 10% chance to start excited
                     grid[row][col] = .excited
                 } else if randomValue < 0.15 && resourceMap[row][col] > 0.7 { // 5% chance to start dormant, influenced by resourceMap
                     grid[row][col] = .dormant
@@ -89,9 +106,9 @@ class GameOfLifeModel: ObservableObject {
                 switch state {
                 case .inactive:
                     // Probability-based transition influenced by resource map and neighbor count
-                    if excitedNeighbors >= 2 && excitedNeighbors <= 4 && Double.random(in: 0..<1) < resourceInfluence * 0.5 {
+                    if excitedNeighbors >= 2 && excitedNeighbors <= 4 && Double.random(in: 0..<1) < resourceInfluence * 1 {
                         newGrid[row][col] = .excited
-                    } else if Double.random(in: 0..<1) < 0.05 {
+                    } else if Double.random(in: 0..<1) < 0.1 {
                         newGrid[row][col] = .dormant // 5% chance to become dormant
                     }
                 case .excited:
@@ -99,7 +116,7 @@ class GameOfLifeModel: ObservableObject {
                 case .refractory:
                     newGrid[row][col] = .inactive // Refractory cells become inactive
                 case .dormant:
-                    if Double.random(in: 0..<1) < 0.1 * resourceInfluence {
+                    if Double.random(in: 0..<1) < 0.2 * resourceInfluence {
                         newGrid[row][col] = .excited // Dormant cells have a 10% chance (adjusted by resourceMap) to become excited
                     }
                 }

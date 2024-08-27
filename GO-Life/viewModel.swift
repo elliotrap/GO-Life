@@ -20,6 +20,7 @@ class Model: ObservableObject {
     @Published var timer: Publishers.Autoconnect<Timer.TimerPublisher>? = nil
     @Published var shadowEnabled = true
     @Published var complexColorEnabled: Bool = true
+    @Published var GOL = "conway"
 
     @Published var speed: CGFloat = 0.01 {
         

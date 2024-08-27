@@ -12,7 +12,7 @@ import SwiftUI
 
 struct GameOfLifeView: View {
     @ObservedObject var viewModel = Model.shared
-    @ObservedObject var generationsModel = GameOfLifeModel()
+    @ObservedObject var generationsModel = GameOfLifeModel.shared
 
 
     
@@ -27,8 +27,9 @@ struct GameOfLifeView: View {
     @State private var chevronPressed = false
     @State private var hz = false
     @State private var patterns = false
+    @State private var algorithms = false
     
-    @State private var GOL = "generations"
+    @State private var isRunning = false
 
 
 
@@ -69,7 +70,7 @@ struct GameOfLifeView: View {
                                 .padding(.bottom, menuPadding)
                             
                         
-                        if chevronPressed && patterns == false, hz == false {
+                        if chevronPressed && patterns == false, hz == false, algorithms == false {
                             ScrollView {
                                 Spacer()
                                     .frame(height: geometry.size.height * 0.06)
@@ -80,13 +81,13 @@ struct GameOfLifeView: View {
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         Button(action: {
-                                            hz = true
+                                            algorithms = true
                                         }, label: {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
 
-                                                Text("Speed")
+                                                Text("Algorithms")
                                                     .foregroundColor(.black)
                                             }
                                         })
@@ -396,6 +397,75 @@ struct GameOfLifeView: View {
                             }
                                 .frame(height: geometry.size.height * 0.400)
                                 .padding(.bottom, geometry.size.height * 0.450)
+                        } else if chevronPressed, algorithms {
+                            ScrollView {
+                                Spacer()
+                                    .frame(height: geometry.size.height * 0.1)
+                                VStack(spacing: 20) {
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        Button(action: {
+                                            viewModel.GOL = "conway"
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Conways Game Of Life")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        Button(action: {
+                                            viewModel.GOL = "generations"
+
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Generations Simulation")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        Button(action: {
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Comming Soon!!")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                }
+                            }
                         }
                     }
                     
@@ -417,6 +487,7 @@ struct GameOfLifeView: View {
                                     
                                     hz = false
                                     patterns = false
+                                    algorithms = false
                                 }
                                 chevronPressed.toggle()
                             }
@@ -441,7 +512,7 @@ struct GameOfLifeView: View {
                         .padding(.bottom, chevronPadding)
                         
                         if chevronPressed == false {
-
+                            if viewModel.GOL == "conway" {
                             VStack(spacing: 0) {
                                 HStack(spacing: 0) {
                                     CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 00, bottomLeftRadius: 0, bottomRightRadius: 0)
@@ -459,60 +530,66 @@ struct GameOfLifeView: View {
                                         .shadow(color: .red, radius: 5, x: 3, y: -5)
                                         .frame(width: geometry.size.width * 0.2843, height: geometry.size.height * 0.004)
                                 }
-                        HStack(spacing: 0) {
-                                
-                              
-                                ZStack {
+                               
+                                HStack(spacing: 0) {
                                     
-                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 18, bottomRightRadius: 0)
-                                        .foregroundColor(Color("menuButtons"))
-                                        .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
                                     
-                                    Button(action: {
-                                        if GOL == "conway" {
-                                            viewModel.isRunning.toggle()
-
-                                            if viewModel.isRunning {
-                                                viewModel.startSimulation()
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 18, bottomRightRadius: 0)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            if viewModel.GOL == "conway" {
+                                                viewModel.isRunning.toggle()
+                                                
+                                                if viewModel.isRunning {
+                                                    viewModel.startSimulation()
+                                                }
+                                            } else if viewModel.GOL == "generations" {
+                                                if generationsModel.isRunning {
+                                                    generationsModel.togglePause()
+                                                    isRunning.toggle()
+                                                } else {
+                                                    generationsModel.startSimulation()
+                                                    isRunning.toggle()
+                                                }
                                             }
-                                        } else if GOL == "generations" {
-                                            viewModel.isRunning.toggle()
-
-                                            generationsModel.startSimulation()
-                                        }
+                                            
+                                        }, label: {
+                                            Text(isRunning ? "Pause" : "Start")
+                                                .underline(false)
+                                                .foregroundColor(.green)
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
                                         
-                                    }, label: {
-                                        Text(viewModel.isRunning ? "Pause" : "Start")
-                                            .underline(false)
-                                            .foregroundColor(.green)
-
-                                    })
-                                    .buttonStyle(.borderless)
-                                    .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
-                                    
-                                    
-                                }
-
-                                ZStack {
-                                    
-                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                        .foregroundColor(Color("menuButtons"))
-                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
-                                    
-                                    Button(action: {
-                                        viewModel.randomizeGrid()
-                                        viewModel.randomizeResources()
-                                    }, label: {
-                                        Text("Randomize")
-                                            .underline(false)
-                                            .foregroundColor(.blue)
-
                                         
-                                    })
-                                    .buttonStyle(.borderless)
-                                    .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.045)
+                                    }
                                     
-                                }
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            viewModel.randomizeGrid()
+                                            viewModel.randomizeResources()
+                                            generationsModel.populateGridRandomly()
+                                        }, label: {
+                                            Text("Randomize")
+                                                .underline(false)
+                                                .foregroundColor(.blue)
+                                            
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.045)
+                                        
+                                    }
                                     ZStack {
                                         
                                         CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 20)
@@ -531,7 +608,7 @@ struct GameOfLifeView: View {
                                             Text("Clear")
                                                 .underline(false)
                                                 .foregroundColor(.red)
-
+                                            
                                             
                                         })
                                         .buttonStyle(.borderless)
@@ -539,7 +616,88 @@ struct GameOfLifeView: View {
                                         
                                     }
                                 }
-                            }
+                                }
+                        } else if viewModel.GOL == "generations" {
+                            VStack(spacing: 0) {
+                                HStack(spacing: 0) {
+                                    CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 00, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                        .foregroundColor(Color(.green))
+                                        .shadow(color: .green, radius: 5, x: -3, y: -5)
+                                        .frame(width: geometry.size.width * 0.347, height: geometry.size.height * 0.004)
+                                    
+                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                        .foregroundColor(Color(.blue))
+                                        .shadow(color: .blue, radius: 7, x: 0, y: -5)
+                                        .frame(width: geometry.size.width * 0.347, height: geometry.size.height * 0.004)
+                                    
+                             
+                                }
+                               
+                                HStack(spacing: 0) {
+                                    
+                                    
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 18, bottomRightRadius: 0)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            if viewModel.GOL == "conway" {
+                                                viewModel.isRunning.toggle()
+                                                isRunning.toggle()
+                                                if viewModel.isRunning {
+                                                    isRunning.toggle()
+
+                                                    viewModel.startSimulation()
+                                                }
+                                            } else if viewModel.GOL == "generations" {
+                                                if generationsModel.isRunning {
+                                                    generationsModel.togglePause()
+                                                    isRunning.toggle()
+                                                } else {
+                                                    generationsModel.startSimulation()
+                                                    isRunning.toggle()
+                                                }
+                                            }
+                                            
+                                        }, label: {
+                                            Text(isRunning ? "Pause" : "Start")
+                                                .underline(false)
+                                                .foregroundColor(.green)
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        
+                                    }
+                                    
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 18)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            viewModel.randomizeGrid()
+                                            viewModel.randomizeResources()
+                                            generationsModel.populateGridRandomly()
+                                        }, label: {
+                                            Text("Randomize")
+                                                .underline(false)
+                                                .foregroundColor(.blue)
+                                            
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.045)
+                                        
+                                    }
+    
+                                }
+                                }
+                        }
                         }
                     }
                     .padding(.bottom, geometry.size.height * 0.02) // Adjust padding proportionally
@@ -568,7 +726,7 @@ struct GameOfLifeView: View {
 
 
 struct GridView: View {
-    @ObservedObject var gameModel = GameOfLifeModel()
+    @ObservedObject var gameModel = GameOfLifeModel.shared
     @ObservedObject var viewModel = Model.shared
     @Binding var grid: [[CellState]]
     @Binding var GenerationsGrid: [[GenerationsCellState]]
@@ -576,12 +734,11 @@ struct GridView: View {
     @Binding var resourceMap: [[Double]]
     let cellSize: CGFloat
 
-    var conwaysGOL = "generations"
     
     var body: some View {
         GeometryReader { geometry in
             
-            if conwaysGOL == "conway" {
+            if viewModel.GOL == "conway" {
                 VStack(spacing: geometry.size.height * 0.0060) {
                     ForEach(0..<grid.count, id: \.self) { row in
                         HStack(spacing: geometry.size.width * 0.0060) {
@@ -605,10 +762,10 @@ struct GridView: View {
                     }
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
-            } else if conwaysGOL == "generations" {
+            } else if viewModel.GOL == "generations" {
                 
                 VStack {
-                    if conwaysGOL == "generations" {
+                    if viewModel.GOL == "generations" {
                         VStack(spacing: geometry.size.height * 0.0060) {
                             ForEach(0..<gameModel.grid.count, id: \.self) { generationsRow in
                                 HStack(spacing: geometry.size.width * 0.0060) {
@@ -634,7 +791,7 @@ struct GridView: View {
         case .inactive:
             return .brown
         case .excited:
-            return .black
+            return .blue
         case .refractory:
             return .blue
         case .dormant:

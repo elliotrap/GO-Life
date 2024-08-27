@@ -203,27 +203,31 @@ class Model: ObservableObject {
         // Trigger an explicit UI update
         objectWillChange.send()
     }
+   
+    @MainActor
     func startSimulation() {
-        DispatchQueue.global(qos: .userInitiated).async {
+        Task {
             while self.isRunning {
-                let newGrid = self.nextGeneration(grid: self.grid, resourceMap: self.resourceMap)
-                DispatchQueue.main.async {
-                    self.grid = newGrid
-                }
-                usleep(UInt32(self.speed * 1_000_000)) // Control speed
+                // Perform the heavy computation in a background task
+                let newGrid = await nextGeneration(grid: self.grid, resourceMap: self.resourceMap)
+                
+                // Update the grid on the main thread
+                self.grid = newGrid
+
+                try? await Task.sleep(nanoseconds: UInt64(self.speed * 1_000_000_000)) // Control speed with Swift concurrency
             }
         }
     }
 
-    
-    func nextGeneration(grid: [[CellState]], resourceMap: [[Double]]) -> [[CellState]] {
+    @MainActor
+    func nextGeneration(grid: [[CellState]], resourceMap: [[Double]]) async -> [[CellState]] {
         var newGrid = grid
         for row in 0..<rows {
             for col in 0..<columns {
                 let liveNeighbors = countLiveNeighbors(grid: grid, row: row, col: col)
                 let currentState = grid[row][col]
                 let resourceLevel = resourceMap[row][col]
-                
+
                 if currentState == .dead && liveNeighbors == 3 && resourceLevel >= 0.3 {
                     newGrid[row][col] = .alive
                 } else if (currentState == .alive || currentState == .complex) && (liveNeighbors < 2 || liveNeighbors > 3 || resourceLevel < 0.2) {
@@ -231,6 +235,8 @@ class Model: ObservableObject {
 
                 } else if currentState == .alive && liveNeighbors == 3 && resourceLevel >= 0.5 {
                     newGrid[row][col] = .complex
+
+
                 }
             }
         }
@@ -245,7 +251,8 @@ class Model: ObservableObject {
         
         return newGrid
     }
-
+    
+    @MainActor
     func countLiveNeighbors(grid: [[CellState]], row: Int, col: Int) -> Int {
         var liveNeighbors = 0
         for i in max(0, row - 1)...min(rows - 1, row + 1) {
@@ -258,6 +265,7 @@ class Model: ObservableObject {
         return liveNeighbors
     }
 
+    @MainActor
     func isComplexPattern(grid: [[CellState]], row: Int, col: Int) -> Bool {
         let complexPatterns: [[[Bool]]] = [
             [
@@ -274,6 +282,7 @@ class Model: ObservableObject {
         return false
     }
 
+    @MainActor
     func matchesPattern(grid: [[CellState]], row: Int, col: Int, pattern: [[Bool]]) -> Bool {
         for i in 0..<pattern.count {
             for j in 0..<pattern[0].count {
@@ -289,6 +298,8 @@ class Model: ObservableObject {
         }
         return true
     }
+
+    @MainActor
 
     func markPatternAsComplex(grid: inout [[CellState]], row: Int, col: Int) {
         let patternSize = 2

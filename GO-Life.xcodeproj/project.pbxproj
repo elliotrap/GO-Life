@@ -15,6 +15,8 @@
 		2125F9CA2C77FA35005FC69C /* GO_LifeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2125F9C92C77FA35005FC69C /* GO_LifeUITests.swift */; };
 		2125F9CC2C77FA35005FC69C /* GO_LifeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2125F9CB2C77FA35005FC69C /* GO_LifeUITestsLaunchTests.swift */; };
 		2125F9D92C780D46005FC69C /* viewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2125F9D82C780D46005FC69C /* viewModel.swift */; };
+		219B93052C7AE2AE00023085 /* signalGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219B93042C7AE2AE00023085 /* signalGenerator.swift */; };
+		219B93072C7D574200023085 /* GenerationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219B93062C7D574200023085 /* GenerationsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,8 @@
 		2125F9C92C77FA35005FC69C /* GO_LifeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GO_LifeUITests.swift; sourceTree = "<group>"; };
 		2125F9CB2C77FA35005FC69C /* GO_LifeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GO_LifeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2125F9D82C780D46005FC69C /* viewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = viewModel.swift; sourceTree = "<group>"; };
+		219B93042C7AE2AE00023085 /* signalGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signalGenerator.swift; sourceTree = "<group>"; };
+		219B93062C7D574200023085 /* GenerationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,8 @@
 				2125F9AE2C77FA34005FC69C /* GO_LifeApp.swift */,
 				2125F9B02C77FA34005FC69C /* ContentView.swift */,
 				2125F9D82C780D46005FC69C /* viewModel.swift */,
+				219B93062C7D574200023085 /* GenerationsModel.swift */,
+				219B93042C7AE2AE00023085 /* signalGenerator.swift */,
 				2125F9B22C77FA35005FC69C /* Assets.xcassets */,
 				2125F9B42C77FA35005FC69C /* Preview Content */,
 			);
@@ -261,8 +267,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2125F9B12C77FA34005FC69C /* ContentView.swift in Sources */,
+				219B93052C7AE2AE00023085 /* signalGenerator.swift in Sources */,
 				2125F9D92C780D46005FC69C /* viewModel.swift in Sources */,
 				2125F9AF2C77FA34005FC69C /* GO_LifeApp.swift in Sources */,
+				219B93072C7D574200023085 /* GenerationsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@ import SwiftUI
 
 struct GameOfLifeView: View {
     @ObservedObject var viewModel = Model.shared
+    @ObservedObject var generationsModel = GameOfLifeModel()
 
 
     
@@ -26,7 +27,8 @@ struct GameOfLifeView: View {
     @State private var chevronPressed = false
     @State private var hz = false
     @State private var patterns = false
-
+    
+    @State private var GOL = "generations"
 
 
 
@@ -48,7 +50,7 @@ struct GameOfLifeView: View {
                                 .foregroundColor(Color("graphBackground"))
                                 .frame(width: geometry.size.width * 0.949, height: geometry.size.height * 0.865) // Adjusted
 
-                            GridView(grid: $viewModel.grid, resourceMap: $viewModel.resourceMap, cellSize: geometry.size.width * 0.5)
+                            GridView(grid: $viewModel.grid, GenerationsGrid: $generationsModel.grid,  resourceMap: $viewModel.resourceMap, cellSize: geometry.size.width * 0.5)
                                 .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2) // Adjusted width and height proportionally
                         }
                     
@@ -467,10 +469,19 @@ struct GameOfLifeView: View {
                                         .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
                                     
                                     Button(action: {
-                                        viewModel.isRunning.toggle()
-                                                 if viewModel.isRunning {
-                                                     viewModel.startSimulation()
-                                                 }                                    }, label: {
+                                        if GOL == "conway" {
+                                            viewModel.isRunning.toggle()
+
+                                            if viewModel.isRunning {
+                                                viewModel.startSimulation()
+                                            }
+                                        } else if GOL == "generations" {
+                                            viewModel.isRunning.toggle()
+
+                                            generationsModel.startSimulation()
+                                        }
+                                        
+                                    }, label: {
                                         Text(viewModel.isRunning ? "Pause" : "Start")
                                             .underline(false)
                                             .foregroundColor(.green)
@@ -557,40 +568,79 @@ struct GameOfLifeView: View {
 
 
 struct GridView: View {
+    @ObservedObject var gameModel = GameOfLifeModel()
     @ObservedObject var viewModel = Model.shared
     @Binding var grid: [[CellState]]
+    @Binding var GenerationsGrid: [[GenerationsCellState]]
+
     @Binding var resourceMap: [[Double]]
     let cellSize: CGFloat
 
+    var conwaysGOL = "generations"
+    
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: geometry.size.height * 0.0060) {
-                ForEach(0..<grid.count, id: \.self) { row in
-                    HStack(spacing: geometry.size.width * 0.0060) {
-                        ForEach(0..<grid[row].count, id: \.self) { col in
-                            let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
-
-                            CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                .foregroundColor(cellColor)
-                                .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
-                                .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
-                                .onTapGesture {
-
-                                        viewModel.placePattern(at: (row, col))
-                                    
-                                }
+            
+            if conwaysGOL == "conway" {
+                VStack(spacing: geometry.size.height * 0.0060) {
+                    ForEach(0..<grid.count, id: \.self) { row in
+                        HStack(spacing: geometry.size.width * 0.0060) {
+                            ForEach(0..<grid[row].count, id: \.self) { col in
+                                let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
                                 
-                                .cornerRadius(3)
-                                .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                    .foregroundColor(cellColor)
+                                    .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                    .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
+                                    .onTapGesture {
+                                        
+                                        viewModel.placePattern(at: (row, col))
+                                        
+                                    }
+                                
+                                    .cornerRadius(3)
+                                    .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                            }
                         }
                     }
                 }
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
+                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
+            } else if conwaysGOL == "generations" {
+                
+                VStack {
+                    if conwaysGOL == "generations" {
+                        VStack(spacing: geometry.size.height * 0.0060) {
+                            ForEach(0..<gameModel.grid.count, id: \.self) { generationsRow in
+                                HStack(spacing: geometry.size.width * 0.0060) {
+                                    ForEach(0..<gameModel.grid[generationsRow].count, id: \.self) { generationsColumn in
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(self.color(for: self.gameModel.grid[generationsRow][generationsColumn])) // Corrected the bug
 
+                                            .frame(width: geometry.size.width * 0.041, height: geometry.size.height * 0.037)
+                                    }
+                                }
+                            }
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                    }
+                }
+            }
+            }
+        }
+    
+    // Define the color(for:) method in the same struct
+    private func color(for state: GenerationsCellState) -> Color {
+        switch state {
+        case .inactive:
+            return .brown
+        case .excited:
+            return .black
+        case .refractory:
+            return .blue
+        case .dormant:
+            return .green
         }
     }
-
     
     func cellColorForRow(_ row: Int, col: Int, complexColorEnabled: Bool) -> Color {
         return colorForCellState(grid[row][col], complexColorEnabled: complexColorEnabled)
@@ -598,9 +648,14 @@ struct GridView: View {
     
     // Function to start the next generation calculation on a background thread
     func calculateNextGeneration() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let newGrid = viewModel.nextGeneration(grid: self.grid, resourceMap: self.resourceMap)
-            DispatchQueue.main.async {
+        Task.detached {
+            // No need for weak self since GridView is a value type (likely a struct)
+
+            // Perform the heavy computation in a background task
+            let newGrid = await viewModel.nextGeneration(grid: self.grid, resourceMap: self.resourceMap)
+
+            // Update the grid on the main thread
+            await MainActor.run {
                 self.grid = newGrid
             }
         }

@@ -13,7 +13,7 @@ import SwiftUI
 struct GameOfLifeView: View {
     @ObservedObject var viewModel = Model.shared
     @ObservedObject var generationsModel = GameOfLifeModel.shared
-
+    @ObservedObject var wolframModel = WolframModel.shared
 
     
     @State private var originalMenuHeight: CGFloat = 100
@@ -51,7 +51,7 @@ struct GameOfLifeView: View {
                                 .foregroundColor(Color("graphBackground"))
                                 .frame(width: geometry.size.width * 0.949, height: geometry.size.height * 0.865) // Adjusted
 
-                            GridView(grid: $viewModel.grid, GenerationsGrid: $generationsModel.grid,  resourceMap: $viewModel.resourceMap, cellSize: geometry.size.width * 0.5)
+                            GridView(grid: $viewModel.grid, GenerationsGrid: $generationsModel.grid, WolframsGrid: $wolframModel.grid, resourceMap: $viewModel.resourceMap, cellSize: geometry.size.width * 0.5)
                                 .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2) // Adjusted width and height proportionally
                         }
                     
@@ -69,6 +69,8 @@ struct GameOfLifeView: View {
                                 .opacity(0.8)
                                 .padding(.bottom, menuPadding)
                             
+                        
+                  
                         
                         if chevronPressed && patterns == false, hz == false, algorithms == false {
                             ScrollView {
@@ -148,12 +150,14 @@ struct GameOfLifeView: View {
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         
-                                        Button(action: {}, label: {
+                                        Button(action: {
+                                            hz = true
+                                        }, label: {
                                             
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
-                                                Text("Object")
+                                                Text("Speed")
                                                     .underline(false)
                                                     .foregroundColor(.black)
                                             }
@@ -246,6 +250,7 @@ struct GameOfLifeView: View {
                                                 .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                             Button(action: {
                                                 viewModel.selectedPattern = .blinker
+                                                viewModel.updateMiniGrid()
                                             }, label: {
                                                 ZStack {
                                                     CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
@@ -270,7 +275,8 @@ struct GameOfLifeView: View {
                                             Button(action: {
                                                 patterns = true
                                                 viewModel.selectedPattern = .toad
-                                                
+                                                viewModel.updateMiniGrid()
+
                                             }, label: {
                                                 ZStack {
                                                     CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
@@ -292,7 +298,8 @@ struct GameOfLifeView: View {
                                                 .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                             Button(action: {
                                                 viewModel.selectedPattern = .acorn
-                                                
+                                                viewModel.updateMiniGrid()
+
                                             }, label: {
                                                 ZStack {
                                                     CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
@@ -314,6 +321,7 @@ struct GameOfLifeView: View {
                                             
                                             Button(action: {
                                                 viewModel.selectedPattern = .beacon
+                                                viewModel.updateMiniGrid()
                                             }, label: {
 
                                                 ZStack {
@@ -336,6 +344,7 @@ struct GameOfLifeView: View {
                                             
                                             Button(action: {
                                                 viewModel.selectedPattern = .pulsar
+                                                viewModel.updateMiniGrid()
                                             }, label: {
 
                                                 ZStack {
@@ -358,6 +367,7 @@ struct GameOfLifeView: View {
                                             
                                             Button(action: {
                                                 viewModel.selectedPattern = .pentadecathlon
+                                                viewModel.updateMiniGrid()
                                             }, label: {
 
                                                 ZStack {
@@ -379,6 +389,7 @@ struct GameOfLifeView: View {
                                             
                                             Button(action: {
                                                 viewModel.selectedPattern = .diehard
+                                                viewModel.updateMiniGrid() 
                                             }, label: {
 
                                                 ZStack {
@@ -456,7 +467,7 @@ struct GameOfLifeView: View {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
-                                                Text("Comming Soon!!")
+                                                Text("")
                                                     .underline(false)
                                                     .foregroundColor(.black)
                                             }
@@ -467,50 +478,72 @@ struct GameOfLifeView: View {
                                 }
                             }
                         }
-                    }
-                    
-                    VStack {
-                        Button(action: {
-                            withAnimation(.spring(duration: 0.2, blendDuration: 0.5)) {
-                                if chevronPressed  {
-                                    
-                                    // Collapse the menu back to its original state
-                                    menuHeight = originalMenuHeight
-                                    menuPadding = originalMenuPadding
-                                    chevronPadding = originalChevronPadding
-                      
-                                } else {
-                                    // Expand the menu
-                                    menuHeight = geometry.size.height * 0.5 // Adjusted based on screen height
-                                    menuPadding = geometry.size.height * 0.382 // Adjusted padding proportionally
-                                    chevronPadding = geometry.size.height * 0.80
-                                    
-                                    hz = false
-                                    patterns = false
-                                    algorithms = false
-                                }
-                                chevronPressed.toggle()
-                            }
-                        }, label: {
-                            if chevronPressed {
-                                
-                                Image(systemName: "chevron.down")
-                                    .resizable()
-                                    .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.01)
-                                    .foregroundColor(.black)
-                            
-                                    
-                            } else {
-                                Image(systemName: "chevron.up")
-                                    .resizable()
-                                    .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.01)
-                                    .foregroundColor(.black)
-
-                            }
-                        })
-                        .buttonStyle(.borderless)
-                        .padding(.bottom, chevronPadding)
                         
+                        Button(action: {
+                            
+                            viewModel.rotateAndMaintainVisibility()
+                           
+                       
+                        }, label: {
+                            Image(systemName: "rotate.left.fill")
+                                .foregroundColor(.white)
+                                .font(.system(size: 18))
+                                .padding(.bottom, 3)
+                        })
+      
+                        .frame(width: geometry.size.width * 0.080, height: geometry.size.height * 0.040)
+                        .background(Color(.black))
+                        .cornerRadius(5)
+                        .position(x: geometry.size.width - (geometry.size.width * 0.85), y: geometry.size.height - (geometry.size.height * 0.97))
+                    }
+      
+
+                    VStack {
+      
+
+                        
+                        HStack {
+                            Button(action: {
+                                withAnimation(.spring(duration: 0.2, blendDuration: 0.5)) {
+                                    if chevronPressed  {
+                                        
+                                        // Collapse the menu back to its original state
+                                        menuHeight = originalMenuHeight
+                                        menuPadding = originalMenuPadding
+                                        chevronPadding = originalChevronPadding
+                                        
+                                    } else {
+                                        // Expand the menu
+                                        menuHeight = geometry.size.height * 0.5 // Adjusted based on screen height
+                                        menuPadding = geometry.size.height * 0.382 // Adjusted padding proportionally
+                                        chevronPadding = geometry.size.height * 0.80
+                                        
+                                        hz = false
+                                        patterns = false
+                                        algorithms = false
+                                    }
+                                    chevronPressed.toggle()
+                                }
+                            }, label: {
+                                if chevronPressed {
+                                    
+                                    Image(systemName: "chevron.down")
+                                        .resizable()
+                                        .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.01)
+                                        .foregroundColor(.black)
+                                    
+                                    
+                                } else {
+                                    Image(systemName: "chevron.up")
+                                        .resizable()
+                                        .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.01)
+                                        .foregroundColor(.black)
+                                    
+                                }
+                            })
+                            .buttonStyle(.borderless)
+                            .padding(.bottom, chevronPadding)
+                        }
                         if chevronPressed == false {
                             if viewModel.GOL == "conway" {
                             VStack(spacing: 0) {
@@ -541,21 +574,12 @@ struct GameOfLifeView: View {
                                             .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
                                         
                                         Button(action: {
-                                            if viewModel.GOL == "conway" {
                                                 viewModel.isRunning.toggle()
                                                 
                                                 if viewModel.isRunning {
                                                     viewModel.startSimulation()
                                                 }
-                                            } else if viewModel.GOL == "generations" {
-                                                if generationsModel.isRunning {
-                                                    generationsModel.togglePause()
-                                                    isRunning.toggle()
-                                                } else {
-                                                    generationsModel.startSimulation()
-                                                    isRunning.toggle()
-                                                }
-                                            }
+                                     
                                             
                                         }, label: {
                                             Text(isRunning ? "Pause" : "Start")
@@ -598,14 +622,22 @@ struct GameOfLifeView: View {
                                             .frame(width: geometry.size.width * 0.25, height: geometry.size.height * 0.05)
                                         
                                         Button(action: {
-                                            viewModel.isRunning = false // Stop the simulation
                                             
-                                            // Ensure grid clearing happens immediately after stopping the simulation
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                viewModel.clearGrid()
+                                            if viewModel.placedPattern {
+                                                viewModel.rotatePattern()
+                                                viewModel.updateMiniGrid()
+
+                                            } else {
+                                                viewModel.isRunning = false // Stop the simulation
+                                                
+                                                // Ensure grid clearing happens immediately after stopping the simulation
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                    viewModel.clearGrid()
+                                                }
+                                                
                                             }
                                         }, label: {
-                                            Text("Clear")
+                                            Text(viewModel.placedPattern ? "Undo" : "Clear")
                                                 .underline(false)
                                                 .foregroundColor(.red)
                                             
@@ -643,15 +675,7 @@ struct GameOfLifeView: View {
                                             .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
                                         
                                         Button(action: {
-                                            if viewModel.GOL == "conway" {
-                                                viewModel.isRunning.toggle()
-                                                isRunning.toggle()
-                                                if viewModel.isRunning {
-                                                    isRunning.toggle()
-
-                                                    viewModel.startSimulation()
-                                                }
-                                            } else if viewModel.GOL == "generations" {
+                                      
                                                 if generationsModel.isRunning {
                                                     generationsModel.togglePause()
                                                     isRunning.toggle()
@@ -659,8 +683,77 @@ struct GameOfLifeView: View {
                                                     generationsModel.startSimulation()
                                                     isRunning.toggle()
                                                 }
-                                            }
                                             
+                                            
+                                        }, label: {
+                                            Text(isRunning ? "Pause" : "Start")
+                                                .underline(false)
+                                                .foregroundColor(.green)
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        
+                                    }
+                                    
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 18)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            viewModel.randomizeGrid()
+                                            viewModel.randomizeResources()
+                                            generationsModel.populateGridRandomly()
+                                        }, label: {
+                                            Text("Randomize")
+                                                .underline(false)
+                                                .foregroundColor(.blue)
+                                            
+                                            
+                                        })
+                                        .buttonStyle(.borderless)
+                                        .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.045)
+                                        
+                                    }
+    
+                                }
+                                }
+                        } else if viewModel.GOL == "wolfram" {
+                            VStack(spacing: 0) {
+                                HStack(spacing: 0) {
+                                    CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 00, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                        .foregroundColor(Color(.green))
+                                        .shadow(color: .green, radius: 5, x: -3, y: -5)
+                                        .frame(width: geometry.size.width * 0.347, height: geometry.size.height * 0.004)
+                                    
+                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                        .foregroundColor(Color(.blue))
+                                        .shadow(color: .blue, radius: 7, x: 0, y: -5)
+                                        .frame(width: geometry.size.width * 0.347, height: geometry.size.height * 0.004)
+                                    
+                             
+                                }
+                               
+                                HStack(spacing: 0) {
+                                    
+                                    
+                                    ZStack {
+                                        
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 18, bottomRightRadius: 0)
+                                            .foregroundColor(Color("menuButtons"))
+                                            .frame(width: geometry.size.width * 0.35, height: geometry.size.height * 0.05)
+                                        
+                                        Button(action: {
+                                            if isRunning {
+                                                   wolframModel.timer?.cancel()
+                                                   isRunning = false
+                                               } else {
+                                                   wolframModel.startSimulation()
+                                                   isRunning = true
+                                               }
                                         }, label: {
                                             Text(isRunning ? "Pause" : "Start")
                                                 .underline(false)
@@ -700,7 +793,7 @@ struct GameOfLifeView: View {
                         }
                         }
                     }
-                    .padding(.bottom, geometry.size.height * 0.02) // Adjust padding proportionally
+                    .padding(.bottom, geometry.size.height * 0.0) // Adjust padding proportionally
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.1) // Adjust height as needed
 
@@ -728,8 +821,11 @@ struct GameOfLifeView: View {
 struct GridView: View {
     @ObservedObject var gameModel = GameOfLifeModel.shared
     @ObservedObject var viewModel = Model.shared
+    @ObservedObject var wolframModel = WolframModel.shared
+
     @Binding var grid: [[CellState]]
     @Binding var GenerationsGrid: [[GenerationsCellState]]
+    @Binding var WolframsGrid: [[WolframCellState]]
 
     @Binding var resourceMap: [[Double]]
     let cellSize: CGFloat
@@ -739,39 +835,87 @@ struct GridView: View {
         GeometryReader { geometry in
             
             if viewModel.GOL == "conway" {
-                VStack(spacing: geometry.size.height * 0.0060) {
-                    ForEach(0..<grid.count, id: \.self) { row in
-                        HStack(spacing: geometry.size.width * 0.0060) {
-                            ForEach(0..<grid[row].count, id: \.self) { col in
-                                let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
-                                
-                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                    .foregroundColor(cellColor)
-                                    .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
-                                    .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
-                                    .onTapGesture {
-                                        
-                                        viewModel.placePattern(at: (row, col))
-                                        
-                                    }
-                                
-                                    .cornerRadius(3)
-                                    .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                
+                
+                ZStack {
+                    // Main grid displaying the Game of Life algorithm visualization
+                    VStack(spacing: geometry.size.height * 0.0060) {
+                        ForEach(0..<grid.count, id: \.self) { row in
+                            HStack(spacing: geometry.size.width * 0.0060) {
+                                ForEach(0..<grid[row].count, id: \.self) { col in
+                                    let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
+                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                        .foregroundColor(cellColor)
+                                        .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                        .frame(width: geometry.size.width * 0.081, height: geometry.size.height * 0.082)
+                                        .onTapGesture {
+                                            viewModel.placePattern(at: (row, col))
+                                        }
+                                        .cornerRadius(3)
+                                        .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                }
                             }
                         }
                     }
+                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
+                    
+                    // Grid-like pattern forming a vertical line for the "X" shape
+                    VStack(spacing: geometry.size.height * 0.027) {
+                        ForEach(0..<90, id: \.self) { row in
+                            Rectangle()
+                                .fill(Color.red.opacity(0.5)) // Set the fill color with opacity
+                                .frame(width: geometry.size.width * 0.015, height: geometry.size.height * 0.021)
+                                .allowsHitTesting(false) // Make the rectangle translucent to touch events
+                        }
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center vertically
+                    
+                    // Grid-like pattern forming a horizontal line for the "X" shape
+                    HStack(spacing: geometry.size.height * 0.027) {
+                        ForEach(0..<50, id: \.self) { row in
+                            Rectangle()
+                                .fill(Color.red.opacity(0.5)) // Set the fill color with opacity
+                                .frame(width: geometry.size.width * 0.021, height: geometry.size.height * 0.015)
+                                .allowsHitTesting(false) // Make the rectangle translucent to touch events
+                        }
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center horizontally
+                    
+                    if viewModel.isRectangleVisible {
+                        
+                        ZStack {
+                            Rectangle()
+                                .frame(width: geometry.size.width * 0.56, height: geometry.size.height * 0.59)
+                            // Smaller grid in the bottom-right corner showing pattern orientation
+                            VStack(spacing: geometry.size.height * 0.007) {
+                                ForEach(0..<15, id: \.self) { row in
+                                    HStack(spacing: geometry.size.height * 0.007) {
+                                        ForEach(0..<15, id: \.self) { col in
+                                            Rectangle()
+                                                .fill(viewModel.miniGrid[row][col] == .alive ? Color.white : Color.red.opacity(0.5))
+                                            
+                                                .frame(width: geometry.size.width * 0.031, height: geometry.size.height * 0.032)
+                                                .allowsHitTesting(false) // Make the rectangle translucent to touch events
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                        .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.4)
+                        .position(x: geometry.size.width + (geometry.size.width * 0.35), y: geometry.size.height + (geometry.size.height * 1.32)) // Position to bottom-right corner
+                        
+                    }
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
             } else if viewModel.GOL == "generations" {
                 
                 VStack {
-                    if viewModel.GOL == "generations" {
                         VStack(spacing: geometry.size.height * 0.0060) {
                             ForEach(0..<gameModel.grid.count, id: \.self) { generationsRow in
                                 HStack(spacing: geometry.size.width * 0.0060) {
                                     ForEach(0..<gameModel.grid[generationsRow].count, id: \.self) { generationsColumn in
                                         CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                            .foregroundColor(self.color(for: self.gameModel.grid[generationsRow][generationsColumn])) // Corrected the bug
+                                            .foregroundColor(self.color(for: self.gameModel.grid[generationsRow][generationsColumn])) 
 
                                             .frame(width: geometry.size.width * 0.041, height: geometry.size.height * 0.037)
                                     }
@@ -779,7 +923,22 @@ struct GridView: View {
                             }
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-                    }
+                }
+            } else if viewModel.GOL == "wolfram" {
+                VStack {
+                        VStack(spacing: geometry.size.height * 0.0030) {
+                            ForEach(0..<wolframModel.grid.count, id: \.self) { row in
+                                HStack(spacing: geometry.size.width * 0.0030) {
+                                    ForEach(0..<wolframModel.grid[row].count, id: \.self) { column in
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .fill(wolframModel.grid[row][column] == .alive ? Color.blue : Color.black)
+                                            .frame(width: geometry.size.width * 0.021, height: geometry.size.height * 0.0185)
+                                    }
+                                }
+                            }
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                    
                 }
             }
             }

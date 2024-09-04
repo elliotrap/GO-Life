@@ -52,6 +52,7 @@
 		219B93042C7AE2AE00023085 /* signalGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signalGenerator.swift; sourceTree = "<group>"; };
 		219B93062C7D574200023085 /* GenerationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationsModel.swift; sourceTree = "<group>"; };
 		219B93082C7E7B3200023085 /* WolframRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WolframRules.swift; sourceTree = "<group>"; };
+		219B930A2C7FF87800023085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 		2125F9AD2C77FA34005FC69C /* GO-Life */ = {
 			isa = PBXGroup;
 			children = (
+				219B930A2C7FF87800023085 /* Info.plist */,
 				2125F9AE2C77FA34005FC69C /* GO_LifeApp.swift */,
 				2125F9B02C77FA34005FC69C /* ContentView.swift */,
 				2125F9D82C780D46005FC69C /* viewModel.swift */,
@@ -441,6 +443,7 @@
 				DEVELOPMENT_TEAM = SDVM3QJL8X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GO-Life/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -470,6 +473,7 @@
 				DEVELOPMENT_TEAM = SDVM3QJL8X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GO-Life/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

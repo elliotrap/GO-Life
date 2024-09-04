@@ -27,7 +27,7 @@ struct GameOfLifeView: View {
     @State private var chevronPressed = false
     @State private var hz = false
     @State private var patterns = false
-    @State private var algorithms = false
+    @State private var graphics = false
     
     @State private var isRunning = false
 
@@ -62,43 +62,19 @@ struct GameOfLifeView: View {
 
                 ZStack {
                     ZStack {
-                    
-                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 50, bottomRightRadius: 50)
-                                .foregroundColor(Color("menu"))
-                                .frame(width: geometry.size.width * 0.945, height: menuHeight)
-                                .opacity(0.8)
-                                .padding(.bottom, menuPadding)
-                            
                         
-                  
+                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 50, bottomRightRadius: 50)
+                            .foregroundColor(Color("menu"))
+                            .frame(width: geometry.size.width * 0.945, height: menuHeight)
+                            .opacity(0.8)
+                            .padding(.bottom, menuPadding)
                         
-                        if chevronPressed && patterns == false, hz == false, algorithms == false {
-                            ScrollView {
-                                Spacer()
-                                    .frame(height: geometry.size.height * 0.06)
+                        
+                        
+                        
+                        if chevronPressed && patterns == false, hz == false, graphics == false {
+                   
                                 VStack(spacing: 20) {
-                                    VStack(spacing: 0) {
-                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                            .foregroundColor(Color(.blue))
-                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                        Button(action: {
-                                            algorithms = true
-                                        }, label: {
-                                            ZStack {
-                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                    .fill(Color("button"))
-
-                                                Text("Algorithms")
-                                                    .foregroundColor(.black)
-                                            }
-                                        })
-                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                        .buttonStyle(.borderless)
-                     
-                                        
-                                    }
-                                    
                                     VStack(spacing: 0) {
                                         CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
                                             .foregroundColor(Color(.blue))
@@ -129,8 +105,8 @@ struct GameOfLifeView: View {
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         Button(action: {
-                                            viewModel.shadowEnabled.toggle()
-                                            viewModel.complexColorEnabled.toggle()
+                                            graphics = true
+                                
                                         }, label: {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
@@ -165,13 +141,12 @@ struct GameOfLifeView: View {
                                         .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
                                         .buttonStyle(.borderless)
                                     }
+                                    
                                 }
-                            }
+                                .padding(.bottom, 250)
                             
                         } else if hz, chevronPressed {
-                            ScrollView {
-                                Spacer()
-                                    .frame(height: geometry.size.height * 0.1)
+                     
                                 VStack(spacing: 20) {
                                     
                                     VStack(spacing: 0) {
@@ -236,196 +211,54 @@ struct GameOfLifeView: View {
                                         .buttonStyle(.borderless)
                                     }
                                 }
-                            }
+                                .padding(.bottom, 250)
+
+                            
                         } else if chevronPressed, patterns  {
-                                    
-                                ScrollView {
-                                    Spacer()
-                                        .frame(height: geometry.size.height * 0.06)
-                                    VStack(spacing: 20) {
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            Button(action: {
-                                                viewModel.selectedPattern = .blinker
-                                                viewModel.updateMiniGrid()
-                                            }, label: {
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-
-                                                    Text("Blinker")
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                         
-                                            
-                                        }
-                                        
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            
-                                            Button(action: {
-                                                patterns = true
-                                                viewModel.selectedPattern = .toad
-                                                viewModel.updateMiniGrid()
-
-                                            }, label: {
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("Toad")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                        
-                                        
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            Button(action: {
-                                                viewModel.selectedPattern = .acorn
-                                                viewModel.updateMiniGrid()
-
-                                            }, label: {
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("Acorn")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                        
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            
-                                            Button(action: {
-                                                viewModel.selectedPattern = .beacon
-                                                viewModel.updateMiniGrid()
-                                            }, label: {
-
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("Beacon")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                        
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            
-                                            Button(action: {
-                                                viewModel.selectedPattern = .pulsar
-                                                viewModel.updateMiniGrid()
-                                            }, label: {
-
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("pulsar")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                        
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            
-                                            Button(action: {
-                                                viewModel.selectedPattern = .pentadecathlon
-                                                viewModel.updateMiniGrid()
-                                            }, label: {
-
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("Pentadecathlon")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                        VStack(spacing: 0) {
-                                            CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                                .foregroundColor(Color(.blue))
-                                                .shadow(color: .blue, radius: 5, x: 3, y: -5)
-                                                .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
-                                            
-                                            Button(action: {
-                                                viewModel.selectedPattern = .diehard
-                                                viewModel.updateMiniGrid() 
-                                            }, label: {
-
-                                                ZStack {
-                                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
-                                                        .fill(Color("button"))
-                                                    Text("queenBeeShuttle")
-                                                        .underline(false)
-                                                        .foregroundColor(.black)
-                                                }
-                                            })
-                                            .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
-                                            .buttonStyle(.borderless)
-                                        }
-                                    }
-
-                            }
-                                .frame(height: geometry.size.height * 0.400)
-                                .padding(.bottom, geometry.size.height * 0.450)
-                        } else if chevronPressed, algorithms {
+                            
                             ScrollView {
                                 Spacer()
-                                    .frame(height: geometry.size.height * 0.1)
+                                    .frame(height: geometry.size.height * 0.06)
                                 VStack(spacing: 20) {
-                                    
                                     VStack(spacing: 0) {
                                         CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
                                             .foregroundColor(Color(.blue))
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         Button(action: {
-                                            viewModel.GOL = "conway"
+                                            viewModel.selectedPattern = .blinker
+                                            viewModel.updateMiniGrid()
                                         }, label: {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
-                                                Text("Conways Game Of Life")
+                                                
+                                                Text("Blinker")
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                        
+                                        
+                                    }
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        
+                                        Button(action: {
+                                            patterns = true
+                                            viewModel.selectedPattern = .toad
+                                            viewModel.updateMiniGrid()
+                                            
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Toad")
                                                     .underline(false)
                                                     .foregroundColor(.black)
                                             }
@@ -441,13 +274,154 @@ struct GameOfLifeView: View {
                                             .shadow(color: .blue, radius: 5, x: 3, y: -5)
                                             .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
                                         Button(action: {
-                                            viewModel.GOL = "generations"
-
+                                            viewModel.selectedPattern = .acorn
+                                            viewModel.updateMiniGrid()
+                                            
                                         }, label: {
                                             ZStack {
                                                 CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
                                                     .fill(Color("button"))
-                                                Text("Generations Simulation")
+                                                Text("Acorn")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        
+                                        Button(action: {
+                                            viewModel.selectedPattern = .beacon
+                                            viewModel.updateMiniGrid()
+                                        }, label: {
+                                            
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Beacon")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        
+                                        Button(action: {
+                                            viewModel.selectedPattern = .pulsar
+                                            viewModel.updateMiniGrid()
+                                        }, label: {
+                                            
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("pulsar")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        
+                                        Button(action: {
+                                            viewModel.selectedPattern = .pentadecathlon
+                                            viewModel.updateMiniGrid()
+                                        }, label: {
+                                            
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Pentadecathlon")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        
+                                        Button(action: {
+                                            viewModel.selectedPattern = .diehard
+                                            viewModel.updateMiniGrid()
+                                        }, label: {
+                                            
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("queenBeeShuttle")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                }
+                                
+                            }
+                            .frame(height: geometry.size.height * 0.400)
+                            .padding(.bottom, geometry.size.height * 0.450)
+                        } else if chevronPressed, graphics {
+
+                                VStack(spacing: 20) {
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        Button(action: {
+                                            viewModel.shadowEnabled.toggle()
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Shadows")
+                                                    .underline(false)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 0.08)
+                                        .buttonStyle(.borderless)
+                                    }
+                                    
+                                    
+                                    VStack(spacing: 0) {
+                                        CustomRoundedRectangle(topLeftRadius: 5, topRightRadius: 5, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(Color(.blue))
+                                            .shadow(color: .blue, radius: 5, x: 3, y: -5)
+                                            .frame(width: geometry.size.width * 0.70, height: geometry.size.height * 0.006)
+                                        Button(action: {
+                                            viewModel.complexColorEnabled.toggle()
+                                        }, label: {
+                                            ZStack {
+                                                CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 25, bottomRightRadius: 25)
+                                                    .fill(Color("button"))
+                                                Text("Color")
                                                     .underline(false)
                                                     .foregroundColor(.black)
                                             }
@@ -476,32 +450,55 @@ struct GameOfLifeView: View {
                                         .buttonStyle(.borderless)
                                     }
                                 }
-                            }
+                                .padding(.bottom, 250)
+
                         }
                         
-                        Button(action: {
+                        if chevronPressed == false {
                             
-                            viewModel.rotateAndMaintainVisibility()
-                           
-                       
-                        }, label: {
-                            Image(systemName: "rotate.left.fill")
-                                .foregroundColor(.white)
-                                .font(.system(size: 18))
-                                .padding(.bottom, 3)
-                        })
-      
-                        .frame(width: geometry.size.width * 0.080, height: geometry.size.height * 0.040)
-                        .background(Color(.black))
-                        .cornerRadius(5)
-                        .position(x: geometry.size.width - (geometry.size.width * 0.85), y: geometry.size.height - (geometry.size.height * 0.97))
+                            HStack {
+                                Button(action: {
+                                    
+                                    viewModel.rotateAndMaintainVisibility()
+                                    
+                                    
+                                }, label: {
+                                    Image(systemName: "rotate.left")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 18))
+                                        .padding(.bottom, 3)
+                                })
+                                .buttonStyle(.borderless)
+                                .frame(width: geometry.size.width * 0.080, height: geometry.size.height * 0.040)
+                                .background(Color("menuButtons"))
+                                .cornerRadius(5)
+                                .position(x: geometry.size.width - (geometry.size.width * 0.8), y: geometry.size.height - (geometry.size.height * 0.973))
+                                
+                                
+                                
+                                Button(action: {
+                                    
+                                    if viewModel.gridCounter < 3 {
+                                        viewModel.gridCounter += 1
+                                    } else if viewModel.gridCounter == 3 {
+                                        viewModel.gridCounter = 0
+                                    }
+                                    
+                                }, label: {
+                                    Image(systemName: "squareshape.split.2x2.dotted")
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 20))
+                                })
+                                .buttonStyle(.borderless)
+                                .frame(width: geometry.size.width * 0.080, height: geometry.size.height * 0.040)
+                                .background(Color("menuButtons"))
+                                .cornerRadius(5)
+                                .position(x: geometry.size.width - (geometry.size.width * 0.72), y: geometry.size.height - (geometry.size.height * 0.973))
+                            }
+                        }
                     }
-      
 
                     VStack {
-      
-
-                        
                         HStack {
                             Button(action: {
                                 withAnimation(.spring(duration: 0.2, blendDuration: 0.5)) {
@@ -520,7 +517,7 @@ struct GameOfLifeView: View {
                                         
                                         hz = false
                                         patterns = false
-                                        algorithms = false
+                                        graphics = false
                                     }
                                     chevronPressed.toggle()
                                 }
@@ -575,7 +572,7 @@ struct GameOfLifeView: View {
                                         
                                         Button(action: {
                                                 viewModel.isRunning.toggle()
-                                                
+                                                viewModel.placedPattern = false
                                                 if viewModel.isRunning {
                                                     viewModel.startSimulation()
                                                 }
@@ -624,8 +621,7 @@ struct GameOfLifeView: View {
                                         Button(action: {
                                             
                                             if viewModel.placedPattern {
-                                                viewModel.rotatePattern()
-                                                viewModel.updateMiniGrid()
+                                                viewModel.undoLastPattern()
 
                                             } else {
                                                 viewModel.isRunning = false // Stop the simulation
@@ -832,59 +828,119 @@ struct GridView: View {
 
     
     var body: some View {
-        GeometryReader { geometry in
-            
-            if viewModel.GOL == "conway" {
-                
-                
-                ZStack {
-                    // Main grid displaying the Game of Life algorithm visualization
-                    VStack(spacing: geometry.size.height * 0.0060) {
-                        ForEach(0..<grid.count, id: \.self) { row in
-                            HStack(spacing: geometry.size.width * 0.0060) {
-                                ForEach(0..<grid[row].count, id: \.self) { col in
-                                    let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
-                                    CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                        .foregroundColor(cellColor)
-                                        .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
-                                        .frame(width: geometry.size.width * 0.081, height: geometry.size.height * 0.082)
-                                        .onTapGesture {
-                                            viewModel.placePattern(at: (row, col))
-                                        }
-                                        .cornerRadius(3)
-                                        .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+
+                GeometryReader { geometry in
+                    ZStack {
+                        // Main grid displaying the Game of Life algorithm visualization
+                        VStack(spacing: geometry.size.height * 0.0060) {
+                            ForEach(0..<grid.count, id: \.self) { row in
+                                HStack(spacing: geometry.size.width * 0.0060) {
+                                    ForEach(0..<grid[row].count, id: \.self) { col in
+                                        let cellColor = colorForCellState(grid[row][col], complexColorEnabled: viewModel.complexColorEnabled)
+                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
+                                            .foregroundColor(cellColor)
+                                            .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                            .frame(width: geometry.size.width * 0.081, height: geometry.size.height * 0.082)
+                                            .onTapGesture {
+                                                viewModel.placePattern(at: (row, col))
+                                            }
+                                            .cornerRadius(3)
+                                            .applyShadowBasedOnColor(cellColor, isShadowEnabled: viewModel.shadowEnabled)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
-                    
-                    // Grid-like pattern forming a vertical line for the "X" shape
-                    VStack(spacing: geometry.size.height * 0.027) {
-                        ForEach(0..<90, id: \.self) { row in
-                            Rectangle()
-                                .fill(Color.red.opacity(0.5)) // Set the fill color with opacity
-                                .frame(width: geometry.size.width * 0.015, height: geometry.size.height * 0.021)
-                                .allowsHitTesting(false) // Make the rectangle translucent to touch events
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center content within GridView
+                        
+                        
+
+
+                        
+
+                        
+                        
+                        
+                        if viewModel.gridCounter == 0 {
+                            
+                            Path { path in
+                                let centerX = geometry.size.width / 0.899
+                                let extendedHeight = geometry.size.height * 1.65
+                                
+                                path.move(to: CGPoint(x: centerX, y: -extendedHeight))
+                                path.addLine(to: CGPoint(x: centerX, y: geometry.size.height + extendedHeight))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
+                            
+                            
+                            Path { path in
+                                let centerX = geometry.size.width - 175
+                                let extendedHeight = geometry.size.height * 1.65
+                                
+                                path.move(to: CGPoint(x: centerX, y: -extendedHeight))
+                                path.addLine(to: CGPoint(x: centerX, y: geometry.size.height + extendedHeight))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
+                            
                         }
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center vertically
-                    
-                    // Grid-like pattern forming a horizontal line for the "X" shape
-                    HStack(spacing: geometry.size.height * 0.027) {
-                        ForEach(0..<50, id: \.self) { row in
-                            Rectangle()
-                                .fill(Color.red.opacity(0.5)) // Set the fill color with opacity
-                                .frame(width: geometry.size.width * 0.021, height: geometry.size.height * 0.015)
-                                .allowsHitTesting(false) // Make the rectangle translucent to touch events
+                        
+                        // Conditionally display the top and bottom dotted lines
+                        if viewModel.gridCounter <= 1 {
+                            // Top dotted line
+                            Path { path in
+                                let centerY = (geometry.size.height / 1.44) - 190
+                                let extendedWidth = geometry.size.width * 0.66
+                                
+                                path.move(to: CGPoint(x: -extendedWidth, y: centerY))
+                                path.addLine(to: CGPoint(x: geometry.size.width + extendedWidth, y: centerY))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
+                            
+                            // Bottom dotted line
+                            Path { path in
+                                let centerY = (geometry.size.height / 1.44) + 130 // Adjust for bottom line
+                                let extendedWidth = geometry.size.width * 0.66
+                                
+                                path.move(to: CGPoint(x: -extendedWidth, y: centerY))
+                                path.addLine(to: CGPoint(x: geometry.size.width + extendedWidth, y: centerY))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
                         }
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center) // Center horizontally
+                        
+                        // Conditionally display the central crosshair lines
+                        if viewModel.gridCounter <= 2 {
+                            // Vertical dotted line in the center of the grid
+                            Path { path in
+                                let centerX = geometry.size.width / 2
+                                let extendedHeight = geometry.size.height * 1.65
+                                
+                                path.move(to: CGPoint(x: centerX, y: -extendedHeight))
+                                path.addLine(to: CGPoint(x: centerX, y: geometry.size.height + extendedHeight))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
+                            
+                            // Horizontal dotted line in the center of the grid
+                            Path { path in
+                                let centerY = geometry.size.height / 2
+                                let extendedWidth = geometry.size.width * 0.66
+                                
+                                path.move(to: CGPoint(x: -extendedWidth, y: centerY))
+                                path.addLine(to: CGPoint(x: geometry.size.width + extendedWidth, y: centerY))
+                            }
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                            .foregroundColor(.red)
+                        }
+
                     
                     if viewModel.isRectangleVisible {
                         
                         ZStack {
                             Rectangle()
+                                .fill(Color.black) // Set the fill color with opacity
                                 .frame(width: geometry.size.width * 0.56, height: geometry.size.height * 0.59)
                             // Smaller grid in the bottom-right corner showing pattern orientation
                             VStack(spacing: geometry.size.height * 0.007) {
@@ -907,41 +963,10 @@ struct GridView: View {
                         
                     }
                 }
-            } else if viewModel.GOL == "generations" {
-                
-                VStack {
-                        VStack(spacing: geometry.size.height * 0.0060) {
-                            ForEach(0..<gameModel.grid.count, id: \.self) { generationsRow in
-                                HStack(spacing: geometry.size.width * 0.0060) {
-                                    ForEach(0..<gameModel.grid[generationsRow].count, id: \.self) { generationsColumn in
-                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                            .foregroundColor(self.color(for: self.gameModel.grid[generationsRow][generationsColumn])) 
+                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
 
-                                            .frame(width: geometry.size.width * 0.041, height: geometry.size.height * 0.037)
-                                    }
-                                }
-                            }
-                        }
-                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-                }
-            } else if viewModel.GOL == "wolfram" {
-                VStack {
-                        VStack(spacing: geometry.size.height * 0.0030) {
-                            ForEach(0..<wolframModel.grid.count, id: \.self) { row in
-                                HStack(spacing: geometry.size.width * 0.0030) {
-                                    ForEach(0..<wolframModel.grid[row].count, id: \.self) { column in
-                                        CustomRoundedRectangle(topLeftRadius: 0, topRightRadius: 0, bottomLeftRadius: 0, bottomRightRadius: 0)
-                                            .fill(wolframModel.grid[row][column] == .alive ? Color.blue : Color.black)
-                                            .frame(width: geometry.size.width * 0.021, height: geometry.size.height * 0.0185)
-                                    }
-                                }
-                            }
-                        }
-                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-                    
-                }
             }
-            }
+            
         }
     
     // Define the color(for:) method in the same struct

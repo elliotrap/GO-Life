@@ -29,7 +29,7 @@ class Model: ObservableObject {
 
     private var fadeOutWorkItem: DispatchWorkItem? // To manage fade-out animation cancellation
 
-    @Published  var isRectangleVisible = false
+    @Published var isRectangleVisible = false
     @Published var isRunning = false
     @Published var selectedPattern: SelectedPattern = .blinker
     @Published var timer: Publishers.Autoconnect<Timer.TimerPublisher>? = nil
@@ -37,6 +37,9 @@ class Model: ObservableObject {
     @Published var complexColorEnabled: Bool = true
     @Published var GOL = "conway"
 
+    @Published var showTopBottomLines = true // State to toggle top and bottom lines
+    @Published var gridCounter: Int = 0
+    
     @Published var speed: CGFloat = 0.01 {
         
         didSet {
@@ -55,6 +58,7 @@ class Model: ObservableObject {
         updateMiniGrid() 
         randomizeResources()
         resetTimer()
+        rotateAndMaintainVisibility()
         
     }
     
